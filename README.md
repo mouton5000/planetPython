@@ -14,4 +14,4 @@ How to use it?
 - choose a file "python_file" you want to see as a solar system
 - launch "python2 D/planetPython.py python_file"
 - you can now admire your code as a solar system
-- if you edit your code, the solar system change in real time
+- if you edit your code, the solar system changes in real time
