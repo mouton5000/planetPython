@@ -13,7 +13,7 @@ ox = vector(1,0,0)
 oy = vector(0,1,0)
 oz = vector(0,0,1)
 
-class Tree:
+class Tree(object):
   def __init__(self, father, content):
     self.father = None
     self.content = content
@@ -26,8 +26,11 @@ class Tree:
     self.children.append(children)
 
   def __str__(self):
-    return '['+str(self.content) + (', ' if len(self.children) != 0 else '') +\
-    ', '.join([str(child) for child in self])+']'
+    if self.children:
+      return '[%s, %s]' % (self.content,
+                           ', '.join(str(child) for child in self))
+    else:
+      return '[%s]' % self.content
 
   def size(self):
     if len(self.children) == 0:
@@ -76,7 +79,7 @@ class Tree:
     return iter(list(self.children))
 
 
-class Planet:
+class Planet(object):
   def __init__(self, node, color):
     self.node = node
     self._removed = False
