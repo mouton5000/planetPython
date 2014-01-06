@@ -170,47 +170,24 @@ if __name__ == '__main__':
     for child in tree:
       buildPlanets(child)
 
-  def animate():
-    while True:
-      for planet in planetList:
-        planet.tick()
-      rate(100);
+  res = simpleParser.parse(source)
+  tree = simpleParser.createTreeFromParse(res, (1,1,1), None)
 
+  buildPlanets(tree)
+  count = 0
+  while True:
+    for planet in planetList:
+      planet.tick()
+    rate(100)
 
-  class Animateur(Thread):
-    def __init__(self):
-      Thread.__init__(self)
+    if count >= 20:
+      try:
+        res = simpleParser.parse(source)
+        tree = simpleParser.createTreeFromParse(res, (1,1,1), None)
 
-    def run(self):
-      res = simpleParser.parse(source)
-      tree = simpleParser.createTreeFromParse(res, (1,1,1), None)
-
-      buildPlanets(tree)
-      animate()
-
-  class Deplaceur(Thread):
-
-
-    def run(self):
-#      sleep(5)
-#      p = pList[2].append((1,0,0))
-#      pList.append(p)
-
-      while True:
-        sleep(2)
-        try:
-          res = simpleParser.parse(source)
-          tree = simpleParser.createTreeFromParse(res, (1,1,1), None)
-        
-          treeMap.planetMap(planetList[0], tree)
-        except IOError:
-          pass
- 
-
-
-  a = Animateur()
-  a.start()
-
-
-  d = Deplaceur()
-  d.start()
+        treeMap.planetMap(planetList[0], tree)
+      except IOError:
+        pass
+      count = 0
+    else:
+      count += 1
