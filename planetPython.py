@@ -13,6 +13,7 @@ ox = vector(1,0,0)
 oy = vector(0,1,0)
 oz = vector(0,0,1)
 
+
 class Tree(object):
   def __init__(self, father, content):
     self.father = None
@@ -44,7 +45,7 @@ class Tree(object):
     else:
       return self.father.children.index(self)
 
-  def setFather(self,father):
+  def setFather(self, father):
     if self == father:
       return
     if self.father:
@@ -52,27 +53,27 @@ class Tree(object):
     self.father = father
     if self.father:
       self.father.children.append(self)
-      self.height = self.father.height+1
+      self.height = self.father.height + 1
       for child in self:
         child.setFather(self)
-    
-  def setFatherAtIndex(self,father, index):
+
+  def setFatherAtIndex(self, father, index):
     if self == father:
       return
     if self.father:
       self.father.children.remove(self)
     self.father = father
     if self.father:
-      self.father.children.insert(index,self)
-      self.height = self.father.height+1
+      self.father.children.insert(index, self)
+      self.height = self.father.height + 1
       for child in self:
         child.setFather(self)
 
   def remove(self):
     index = self.index()
     for child in self:
-      child.setFatherAtIndex(self.father,index)
-      index+=1
+      child.setFatherAtIndex(self.father, index)
+      index += 1
     self.setFather(None)
 
   def __iter__(self):
@@ -84,15 +85,15 @@ class Planet(object):
     self.node = node
     self._removed = False
     self._removed_timer = 200
-    
+
     if not node.father:
-      self.sphere = sphere(pos = (0,0,0), radius = 0.5, color = color)
+      self.sphere = sphere(pos=(0, 0, 0), radius=0.5, color=color)
     else:
       self._theta = random() * pi
       self._phi = random() * pi
       self._psi = random() * pi
 
-      self.sphere = sphere(pos=(0,0,0), radius=0, color = color)
+      self.sphere = sphere(pos=(0, 0, 0), radius=0, color=color)
 
       self._moving = True
       self._moving_timer = 1000
@@ -110,17 +111,16 @@ class Planet(object):
       self.sphere.radius = self.radius
     else:
       mt = self._moving_timer
-      self.sphere.pos = (1-5/mt) * self.sphere.pos + 5/mt * position
-      self.sphere.radius = (1-5/mt) * self.sphere.radius + 5/mt * self.radius
+      self.sphere.pos = (1 - 5/mt) * self.sphere.pos + 5/mt * position
+      self.sphere.radius = (1 - 5/mt) * self.sphere.radius + 5/mt * self.radius
       self._moving_timer -= 1
-    
 
   def position(self):
     positionFather = self.node.father.content.sphere.pos
-    position = positionFather + self.radius * 8 * ( \
-    (sin(self._psi) * cos(self._theta) + cos(self._psi) * sin(self._phi) * sin(self._theta) ) * ox + \
-    (sin(self._psi) * sin(self._theta) - cos(self._psi) * sin(self._phi) * cos(self._theta) ) * oy + \
-    (cos(self._psi) * cos(self._phi)) * oz )
+    position = positionFather + self.radius * 8 * (
+        (sin(self._psi) * cos(self._theta) + cos(self._psi) * sin(self._phi) * sin(self._theta) ) * ox +
+        (sin(self._psi) * sin(self._theta) - cos(self._psi) * sin(self._phi) * cos(self._theta) ) * oy +
+        (cos(self._psi) * cos(self._phi)) * oz )
 
     return position
 
@@ -139,7 +139,7 @@ class Planet(object):
     self._removed = True
 
   def tickRemove(self):
-    self.sphere.radius =  (1-1/self._removed_timer) * self.sphere.radius
+    self.sphere.radius = (1 - 1/self._removed_timer) * self.sphere.radius
     self._removed_timer -= 1
     if self._removed_timer == 0:
       self.sphere.visible = False
@@ -147,22 +147,23 @@ class Planet(object):
       planetList.remove(self)
 
   def append(self, color):
-    node = Tree(self.node,None)
-    node.content = Planet(node,color)
+    node = Tree(self.node, None)
+    node.content = Planet(node, color)
     planetList.append(node.content)
     return node.content
 
   def update(self):
     height = self.node.height
     self.radius = 1/4**height
-    self.angularVelocity = height*2*pi/500
+    self.angularVelocity = height * 2 * pi/500
     self._moving_timer = 200
     self._moving = True
-    
+
+
 planetList = []
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
   source = sys.argv[1]
 
   print source
@@ -174,7 +175,7 @@ if __name__ == '__main__':
       buildPlanets(child)
 
   res = simpleParser.parse(source)
-  tree = simpleParser.createTreeFromParse(res, (1,1,1), None)
+  tree = simpleParser.createTreeFromParse(res, (1, 1, 1), None)
 
   buildPlanets(tree)
   count = 0
@@ -186,7 +187,7 @@ if __name__ == '__main__':
     if count >= 20:
       try:
         res = simpleParser.parse(source)
-        tree = simpleParser.createTreeFromParse(res, (1,1,1), None)
+        tree = simpleParser.createTreeFromParse(res, (1, 1, 1), None)
 
         treeMap.planetMap(planetList[0], tree)
       except IOError:
